@@ -121,8 +121,6 @@ cv::Mat findRec(cv::Mat InputMat){
 
     // Mat drawing = cv::Mat::zeros(output_with_Rec.size(), CV_8UC3);
 
-    cv::RotatedRect boundingbox;
-
     cv::Scalar color;
 
     vector<Point> rect;
@@ -164,13 +162,13 @@ cv::Mat findRec(cv::Mat InputMat){
                 // you should see a black box around the light bar
                 for (int i = 0; i < rect.size(); i++){
 
-                    cv::line(input, rect[0],rect[1],cv::Scalar(10,255,255));
+                    cv::line(input, rect[0],rect[1],cv::Scalar(0,255,255));
 
-                    cv::line(input, rect[1],rect[2],cv::Scalar(10,255,255));
+                    cv::line(input, rect[1],rect[2],cv::Scalar(0,255,255));
 
-                    cv::line(input, rect[2],rect[3],cv::Scalar(10,255,255));
+                    cv::line(input, rect[2],rect[3],cv::Scalar(0,255,255));
 
-                    cv::line(input, rect[3],rect[0],cv::Scalar(10,255,255));
+                    cv::line(input, rect[3],rect[0],cv::Scalar(0,255,255));
                 }
             }
 
