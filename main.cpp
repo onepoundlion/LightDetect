@@ -22,12 +22,12 @@ int main()
     for (;;) {
         Mat frame;
         cap>>frame;
+        cv::imshow("Original feed", frame);
         inHSV=toHSV(frame);
         resultFilter=FilterColor(inHSV, 0);
         After_dilate=erode_dilate(resultFilter);
         withrect=findRec(After_dilate);
         cv::imshow("Filter Prototype I", withrect);
-        cv::imshow("Original feed", frame);
         char c = cvWaitKey(50);
         if (c == 27)
             break;

@@ -1,7 +1,7 @@
 # depslib dependency file v1.0
 1551932686 source:c:\cv\lightbardetect\lightdetect\lightinfo.c
 
-1553036641 source:c:\cv\lightbardetect\lightdetect\main.cpp
+1553110305 source:c:\cv\lightbardetect\lightdetect\main.cpp
 	<iostream>
 	<stdio.h>
 	"LightDetect.h"
@@ -19,13 +19,14 @@
 	<iostream>
 	<stdio.h>
 
-1553036886 source:c:\cv\lightbardetect\lightdetect\lightdetect.cpp
+1553110736 source:c:\cv\lightbardetect\lightdetect\lightdetect.cpp
 	<opencv2/opencv.hpp>
 	<opencv2/core.hpp>
 	<opencv2/highgui.hpp>
 	<opencv2/imgproc.hpp>
 	<iostream>
 	<vector>
+	<list>
 
 1552000598 source:c:\cv\lightbardetect\lightdetect\videoguiout.cpp
 	<iostream>
@@ -34,7 +35,7 @@
 	<opencv2/core.hpp>
 	"GUIforHSV.h"
 
-1553036110 c:\cv\lightbardetect\lightdetect\lightdetect.h
+1553107438 c:\cv\lightbardetect\lightdetect\lightdetect.h
 	<stdio.h>
 	"opencv2/opencv.hpp"
 	<opencv2/highgui.hpp>

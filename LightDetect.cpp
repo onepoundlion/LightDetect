@@ -70,7 +70,15 @@ cv::Mat FilterColor(cv::Mat InputMat, int enemycolor){
     cv::bitwise_and(InputMat, InputMat, resultHSV, maskHSV);
 
     // cv::cvtColor(resultHSV, resultHSV, cv::COLOR_BGR2HSV);
+
+    Mat hsv_channels[3];
+
+    cv::split(resultHSV, hsv_channels);
+
+    resultHSV=hsv_channels[2];
+
     return resultHSV;
+
 }
 
 // Further Filter out noises
@@ -90,29 +98,34 @@ cv::Mat erode_dilate(cv::Mat InputMat){
     return result_dilate;
 }
 
+// angle calculation
+double angle(Point pt1, Point pt2, Point pt0){
+    double dx1 = pt1.x - pt0.x;
+    double dy1 = pt1.y - pt0.y;
+    double dx2 = pt2.x - pt0.x;
+    double dy2 = pt2.y - pt0.y;
+    return (dx1*dx2 + dy1*dy2) / sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
+}
+
 cv::Mat findRec(cv::Mat InputMat){
 
     Mat input = InputMat;
 
-    Mat output_with_Rec;
+   // Mat output_with_Rec;
 
     std::vector<vector<cv::Point>> contours;
 
-    std::vector<cv::Vec4i> hierachy;
+    // std::vector<cv::Vec4i> hierachy;
 
-    cv::findContours(output_with_Rec,contours,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
+    cv::findContours(input,contours,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
 
-    Mat drawing = cv::Mat::zeros(output_with_Rec.size(), CV_8UC3);
-
-    cv::Point2f corners[contours.size()][4];
+    // Mat drawing = cv::Mat::zeros(output_with_Rec.size(), CV_8UC3);
 
     cv::RotatedRect boundingbox;
 
     cv::Scalar color;
 
-    list<vector<Point>> rect;
-
-    int index=0;
+    vector<Point> rect;
 
     vector<Point> polygon;
 
@@ -134,37 +147,36 @@ cv::Mat findRec(cv::Mat InputMat){
     }
     */
 
-    double maxarea=0.0;
+        approxPolyDP(contours[i], polygon, arcLength(contours[i], 1) * 0.02, 1);
 
-    approxPolyDP(contours[i], polygon, arcLength(contours[i], 1) * 0.02, 1);
+        if (isContourConvex(polygon) && polygon.size() == 4){
 
-    if (isContourConvex(polygon) && polygon.size() == 4){
+            double maxCosine = 0;
 
-        double maxCosine = 0;
+            for (int j = 2; j < 5; j++){
+                double cosine = fabs(angle(polygon[j % 4], polygon[j - 2], polygon[j - 1]));
+                maxCosine = MAX(maxCosine, cosine);
+            }
 
-        for (int j = 2; j < 5; j++){
-            double cosine = fabs(angle(polygon[j % 4], polygon[j - 2], polygon[j - 1]));
-            maxCosine = MAX(maxCosine, cosine);
+            if (maxCosine < 0.3){
+                rect=polygon;
+
+                // you should see a black box around the light bar
+                for (int i = 0; i < rect.size(); i++){
+
+                    cv::line(input, rect[0],rect[1],cv::Scalar(10,255,255));
+
+                    cv::line(input, rect[1],rect[2],cv::Scalar(10,255,255));
+
+                    cv::line(input, rect[2],rect[3],cv::Scalar(10,255,255));
+
+                    cv::line(input, rect[3],rect[0],cv::Scalar(10,255,255));
+                }
+            }
+
         }
-
-        if (maxCosine < 0.3){
-            rect.push_back(polygon);
-        }
-
     }
-    for (int i = 0; i < rect.size()-1; i++){
-
-            cv::line(drawing, corners[i][0],corners[i][1],cv::Scalar(255,255,255));
-
-            cv::line(drawing, corners[i][1],corners[i][2],cv::Scalar(255,255,255));
-
-            cv::line(drawing, corners[i][2],corners[i][3],cv::Scalar(255,255,255));
-
-            cv::line(drawing, corners[i][3],corners[i][0],cv::Scalar(255,255,255));
-    }
-
-
-    return drawing;
+    return input;
 }
 
 

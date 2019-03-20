@@ -32,13 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="../../CVTrack1.0/cv-pi/pleasework/videoutil.hpp" />
-		<Unit filename="GUIforHSV.cpp" />
-		<Unit filename="GUIforHSV.h" />
 		<Unit filename="LightDetect.cpp" />
 		<Unit filename="LightDetect.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="videoutil.cpp" />
+		<Unit filename="red-side2-ev--3.MOV" />
 		<Extensions>
 			<code_completion />
 			<envvars />
