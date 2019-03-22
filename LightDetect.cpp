@@ -14,6 +14,11 @@
 using namespace std;
 using namespace cv;
 
+struct Rect_Mat{
+    Mat Output;
+    list<RotatedRect> Rect;
+};
+
 // covert the input video to HSV Color Space
 cv::Mat toHSV(cv::Mat InputMat){
 
@@ -107,7 +112,9 @@ double angle(Point pt1, Point pt2, Point pt0){
     return (dx1*dx2 + dy1*dy2) / sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
-cv::Mat findRec(cv::Mat InputMat){
+Rect_Mat findRec(cv::Mat InputMat){
+
+    list<RotatedRect> Rect;
 
     Mat input = InputMat;
 
@@ -127,23 +134,9 @@ cv::Mat findRec(cv::Mat InputMat){
 
     vector<Point> polygon;
 
+    RotatedRect MATWITHRECT;
+
     for (int i = 0; i < contours.size();i++){
-
-    /*
-        color = cv::Scalar(0,100,0);
-
-        drawContours( drawing,contours,i,color,1,8,hierachy,0,cv::Point());
-
-        boundingbox = cv::minAreaRect(contours[i]);
-
-        cv::Point2f pts[4];
-
-        for(int p=0; p<3; p++){
-            corners[i][p] = pts[p];
-        }
-
-    }
-    */
 
         approxPolyDP(contours[i], polygon, arcLength(contours[i], 1) * 0.02, 1);
 
@@ -157,24 +150,35 @@ cv::Mat findRec(cv::Mat InputMat){
             }
 
             if (maxCosine < 0.3){
+
                 rect=polygon;
 
-                // you should see a black box around the light bar
-                for (int i = 0; i < rect.size(); i++){
+                MATWITHRECT=RotatedRect(rect[0], rect[1], rect[2]);
 
-                    cv::line(input, rect[0],rect[1],cv::Scalar(0,255,255));
+                Rect.push_front(MATWITHRECT);
 
-                    cv::line(input, rect[1],rect[2],cv::Scalar(0,255,255));
+                // you should see a black bounding box with 4 black circles around the light bar
+                for (int i = 0; i < 4; i++){
 
-                    cv::line(input, rect[2],rect[3],cv::Scalar(0,255,255));
+                    int p=i+1;
 
-                    cv::line(input, rect[3],rect[0],cv::Scalar(0,255,255));
+                    if (p>3){
+                        p=0;
+                    }
+
+                    circle(input, rect[i], 10, Scalar(0, 0, 0),-1);
+
+                    cv::line(input, rect[i],rect[p],cv::Scalar(0,255,255));
+
                 }
             }
 
         }
     }
-    return input;
+
+    Rect_Mat OutputIMG={input, Rect};
+
+    return OutputIMG;
 }
 
 

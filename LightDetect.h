@@ -6,8 +6,15 @@
 #include<opencv2/highgui.hpp>
 #include<opencv2/imgproc.hpp>
 #include <vector>
+#include <list>
 
 using namespace cv;
+
+struct Rect_Mat{
+public:
+    Mat Output;
+    list<cv::RotatedRect> Rect;
+};
 
 cv::Mat toHSV(cv::Mat InputMat);
 

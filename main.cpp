@@ -26,8 +26,8 @@ int main()
         inHSV=toHSV(frame);
         resultFilter=FilterColor(inHSV, 0);
         After_dilate=erode_dilate(resultFilter);
-        withrect=findRec(After_dilate);
-        cv::imshow("Filter Prototype I", withrect);
+        Rect_Mat withrect=findRec(After_dilate);
+        cv::imshow("Filter Prototype I", withrect.Output);
         char c = cvWaitKey(50);
         if (c == 27)
             break;
